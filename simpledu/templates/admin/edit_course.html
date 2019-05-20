@@ -1,0 +1,47 @@
+{% extends "admin/index.html" %}
+{% from "macros.html" import render_form %}
+
+{% block title %}
+  章节管理
+{% endblock %}
+
+
+{% block operation %}
+  <a href="{{ url_for('admin.create_chapter', course_id=course.id) }}" type="button" class="btn btn-primary">
+    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+    添加章节
+  </a>
+{% endblock %}
+
+{% block admin %}
+  <h4>编辑课程</h4>
+  {{ render_form(form, url_for('admin.edit_course', course_id=course.id)) }}
+  <table class="table">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>名称</th>
+      <th>操作</th>
+    </tr>
+    <tbody>
+      {% for chapter in course.chapters %}
+      <tr>
+        <td>{{ chapter.id }}</td>
+        <td>{{ chapter.name }}</td>
+        <td>
+          <!-- 使用了俩个 Bootstrap 的 icon 代表编辑和删除操作 -->
+          <div class="btn-group" role="group">
+            <a href="{{ url_for('admin.edit_chapter',course_id=chapter.course_id, chapter_id=chapter.id) }}" type="button" class="btn btn-default" title＝"编辑">
+              <span class="glyphicon glyphicon-pencil" title＝"编辑" aria-hidden="true"></span>
+            </a>
+            <a href="{{ url_for('admin.delete_chapter', course_id=chapter.course_id, chapter_id=chapter.id) }}" type="button" class="btn btn-default" title＝"删除">
+              <span class="glyphicon glyphicon-trash" title＝"删除" aria-hidden="true"></span>
+            </a>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </thead>
+</table>
+{% endblock %}

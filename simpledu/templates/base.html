@@ -3,9 +3,12 @@
     <head>
         <meta charset="UTF-8">
         <title>{% block title %}{% endblock %}</title>
+        {% block head_css %}
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css">
         <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
-        
+
+        <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet" type="text/css"/>
+        {% endblock %}
     </head>
     <body>
       <nav class="nav navbar-inverse">
@@ -17,18 +20,66 @@
                   <span class="icon-bar"></span>
                   <span class="icon-bar"></span>
               </button>
-              <a class="navbar-brand" href="/">Simpledu</a>
+              <a class="navbar-brand" href="/">瓜娃子平台</a>
               </div>
 
               <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                   <ul class="nav navbar-nav">
-                      <li class="active"> <a href="/">kecheng<span class="sr-only">(current)</span></a> </li>
-                      <li> <a href="#">zhibo</a> </li>
+                      <li class="active">
+                         <a href="/" class="dropdown-toggle" data-toggle="dropdown">
+                           课程
+                           <span class="sr-only">(current)</span>
+                           <b class="caret"></b>
+                         </a> 
+                         <ul class="dropdown-menu">
+                           <li><a href="#">jmeter</a></li>
+                           <li><a href="#">EJB</a></li>
+                           <li><a href="#">Jasper Report</a></li>
+                           <li class="divider"></li>
+                           <li><a href="#">分离的链接</a></li>
+                           <li class="divider"></li>
+                           <li><a href="#">另一个分离的链接</a></li>
+                         </ul>
+                      </li>
+                      <li> <a href="#">直播</a> </li>
+                      <li class="dropdown"> 
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                          实战
+                          <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                          <li><a href="#">jmeter</a></li>
+                          <li><a href="#">EJB</a></li>
+                          <li><a href="#">Jasper Report</a></li>
+                          <li class="divider"></li>
+                          <li><a href="#">分离的链接</a></li>
+                          <li class="divider"></li>
+                          <li><a href="#">另一个分离的链接</a></li>
+                        </ul>
+                      </li>
+                      <li><a href="#">直播</a></li>
+                      {% if current_user.is_authenticated and current_user.is_admin %}
+                        <li><a href="{{ url_for('admin.index') }}">控制台</a></li>
+                      {% endif %}
                   </ul>
 
                   <ul class="nav navbar-nav navbar-right">
-                    <li> <a href="{{ url_for('front.register') }}">zhuce</a> </li>
-                    <li> <a href="{{ url_for('front.login') }}">denglu</a> </li>
+                    {% if not current_user.is_authenticated %}
+                      <li> <a href="{{ url_for('front.register') }}">注册</a> </li>
+                      <li> <a href="{{ url_for('front.login') }}">登录</a> </li>
+                    {% else %}
+                      <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                          {{ current_user.username }}
+                          <span class='caret'></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                          <li><a href="#">个人主页</a></li>
+                          <li role="separator" class="divider"></li>
+                          <li><a href="{{ url_for('front.logout') }}">退出登录</a></li>
+                        </ul>
+                      </li>
+                    {% endif %} 
                   </ul>
 
 
@@ -36,12 +87,169 @@
           </div>
       </nav>
       <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }} alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">>$times;<span> 
+                </button>
+                {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+
+        
+      
         {% block body %}{% endblock %}
         {% block footer %}{% endblock %}
       </div>
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script>
-    <script src="{{ url_for('static', filename='main.js') }}"></script>
+      <div class="cloud-banner">
+            <div class="cloud-bubble-one"></div>
+            <div class="cloud-bubble-two"></div>
+            <div class="cloud-bubble-three"></div>
+            <div class="cloud-bubble-text">选我  我可以  我能行!</div>
+            <div class="cloud-bubble-link">
+                <a href="#" target="_blank">免费注册</a>
+            </div>
+        </div>
+        <div class="cloud-footer">
+            <div class="cloud-footer-box">
+                <div class="cloud-footer-feature">
+                    <ul class="clearfix">
+                        <li class="feature-item001">
+                            <a href="#">
+                                <span>7*24小时服务支持</span>
+                            </a>
+                        </li>
+                        <li class="feature-item002">
+                            <a href="#">
+                                <span>.......</span>
+                            </a>
+                        </li>
+                        <li class="feature-item003">
+                            <a href="#">
+                                <span>名师在线授课</span>
+                            </a>
+                        </li>
+                        <li class="feature-item004">
+                            <a href="#">
+                                <span>超全学习资料</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="cloud-footer-nav clearfix">
+                    <div class="cloud-footer-nav-logo">
+                        <div class="cloud-comm">
+                            <div class="cloud-comm-logo">
+                                <span></span>
+                            </div>
+                            <div class="cloud-info">
+                                <p>重庆guawazi网</p>
+                                <p>qwq</p>
+                            </div>
+                        </div>
+                        <div class="cloud-share">
+                            <p class="wei-xin">
+                                <span class="corner wx-corner"></span>
+                            </p>
+                            <p class="wei-bo">
+                                <span class="corner wx-corner"></span>
+                            </p>
+                            <ul class="clearfix">
+                                <li>
+                                    <a href="#">
+                                        <span class="icon-blog"></span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <span class="icon-wei"></span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <span class="icon-qq"></span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <span class="icon-mail"></span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="cloud-footer-nav-list clearfix">
+                        <ul>
+                            <li class="list-title">推荐
+                            </li>
+                            <li>
+                                <a href="#">无</a>
+                            </li>
+                        </ul>
+                        <ul>
+                            <li class="list-title">友情链接
+                            </li>
+                            <li>
+                                <a href="#">无</a>
+                            </li>
+       
+                        </ul>
+                        <ul>
+                            <li class="list-title">关于我们
+                            </li>
+                            <li>
+                                <a href="#">无</a>
+                            </li>
+                        </ul>
+                        <ul>
+                            <li class="list-title">其他
+                            </li>
+                            <li>
+                                <a href="#">无</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="cloud-copyright cloud-copyright-about">
+                <p>emmmmmmm</p>
+                <!--<p>Copyright © 2001-2018 sicaiyun.com. All Rights Reserved. 北京四彩云 版权所有</p>
+                <p>
+                    《中华人民共和国增值电信业务经营许可证》京ICP备xxxxx号-3 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#" target="_blank">京ICP备15006025号-3</a>
+                    地址：北京市海淀区西三环北路192号大厦
+                
+                </p>-->
+            </div>
+        </div>      
 
+
+
+
+      {% block tail_js %}
+        <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script>
+        <script src="{{ url_for('static', filename='main.js') }}"></script>
+
+        <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.js') }}"></script>
+        <script type="text/javascript">
+            
+            $(".icon-blog").mouseenter(function() {
+                $(".wei-bo").show()
+            }).mouseleave(function() {
+                $(".wei-bo").hide()
+            });
+            $(".icon-wei").mouseenter(function() {
+                $(".wei-xin").show()
+            }).mouseleave(function() {
+                $(".wei-xin").hide()
+            });
+        
+        </script>
+      {% endblock %}
     </body>
 </html>
